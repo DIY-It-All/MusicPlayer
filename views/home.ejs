@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player</title>
+    <style>
+      .text-aspect {
+        font-size: 7vw;
+      }
+      * {
+        word-break: break-all;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="text-white bg-gray-800 grid grid-cols-5">
+
+    <div id="all_music" class="border-r-4 p-4 min-h-screen">
+      <!-- search bar -->
+      <div id="search" class="">
+        <!-- <input type="text" name="" id="" class="col-span-1 sm:col-span-3" />
+        <button class="">🔍</button> -->
+        <button class="break-keep my-2 bg-slate-200 text-blue-950 p-2 rounded hover:bg-slate-400 active:bg-slate-500" onclick="showModal()">➕Add_Music</button>
+      </div>
+
+      <!-- music list -->
+      <div id="music_list">
+        <div class="music_entry">
+          <span class="music_name">Perfect</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="main_player" class="col-span-4">
+      <video src="" id="hidden_video" class="hidden"></video>
+      <div class="grid grid-cols-2 grid-rows-3 min-h-screen -translate-y-1/4">
+        <h1
+          id="heading"
+          class="col-span-2 mr-auto ml-auto text-aspect row-start-2 p-12"
+        >
+          MUSIC NAME
+        </h1>
+        <div
+          class="row-start-3 col-span-2 grid grid-cols-3 p-4 text-center grid-row-end"
+          id="extra_controls"
+        >
+          <input type="range" name="controling" id="pos" class="col-span-3" />
+          <button class="btn ptn-primary" onclick="minus()">⏮️</button>
+          <button class="btn ptn-primary" onclick="toggle_play()">⏯️</button>
+          <button class="btn ptn-primary" onclick="plus()">⏭️</button>
+        </div>
+      </div>
+    </div>
+    
+    <div id="modal" class="hidden absolute w-screen h-screen flex items-center justify-center">
+      <form action="add" class="bg-slate-500 p-4 h-2/4 w-2/4 flex items-center flex-col justify-between">
+        <button class="text-end" style="width: -webkit-fill-available; cursor: default;" type="button"><span class="p-2 rounded-full bg-red-700 hover:bg-red-500" style="cursor: pointer;" onclick="hideModal()">X</span></button>
+        <label for="name">Name: </label><input name="name" type="text" id="name" required><br>
+        <label for="file">File: </label><input name="file" type="file" id="file" required>
+
+      </form>
+    </div>
+    <script>
+      var list = [
+        {
+          name: "perfect",
+          img: "/perfect.jpeg",
+          path: "/perfect.wav",
+        },
+        {
+          name: "perfectola",
+          img: "/perfect.jpeg",
+          path: "/perfect.wav",
+        },
+      ];
+      var current = 0;
+      var audio = new Audio(list[current].path);
+
+      function create() {
+        list_div = document.querySelector("#music_list");
+        list_div.innerHTML = "";
+        for (let i = 0; i < list.length; i++) {
+          list_div.innerHTML += `
+        <div onclick='direct_play(this.dataset.index)' data-index='${i}' class="music_entry">
+          <span data-index='${i}' class="music_name">${list[i].name}</span>
+        </div>`;
+        }
+      }
+
+      function display() {
+        document.querySelector("#heading").innerText = list[current].name;
+      }
+      function direct_play(index) {
+        audio.pause();
+        current = parseInt(index);
+        audio = new Audio(list[current].path);
+        audio.play();
+        display();
+      }
+
+      function plus() {
+        audio.pause();
+        current += 1;
+        if (current >= list.length) {
+          current = 0;
+        }
+        audio = new Audio(list[current].path);
+        audio.play();
+        display();
+      }
+
+      function minus() {
+        audio.pause();
+        current -= 1;
+        if (current < 0) {
+          current = list.length - 1;
+        }
+        audio = new Audio(list[current].path);
+        audio.play();
+        display();
+      }
+
+      function toggle_play() {
+        if (audio.paused) {
+          audio.play();
+        } else {
+          audio.pause();
+        }
+        display();
+      }
+      document.querySelector("#pos").onclick = () => {
+        audio.currentTime = document.querySelector("#pos").value;
+      };
+      function bar() {
+        document.querySelector("#pos").max = audio.duration;
+        document.querySelector("#pos").value = audio.currentTime;
+      }
+      create();
+      function animate(){
+        bar();
+        requestAnimationFrame(animate);
+      }
+      function showModal(){
+        document.querySelector('#modal').classList.remove('hidden');
+      }
+      function hideModal(){
+        document.querySelector('#modal').classList.add('hidden');
+      }
+      setInterval(() => {
+        create();
+      }, 100000);
+    </script>
+  </body>
+</html>
