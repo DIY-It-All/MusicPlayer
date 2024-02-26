@@ -15,13 +15,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="text-white bg-gray-800 grid grid-cols-5">
-
     <div id="all_music" class="border-r-4 p-4 min-h-screen">
       <!-- search bar -->
       <div id="search" class="">
         <!-- <input type="text" name="" id="" class="col-span-1 sm:col-span-3" />
         <button class="">🔍</button> -->
-        <button class="break-keep my-2 bg-slate-200 text-blue-950 p-2 rounded hover:bg-slate-400 active:bg-slate-500" onclick="showModal()">➕Add_Music</button>
+        <button
+          class="break-keep my-2 bg-slate-200 text-blue-950 p-2 rounded hover:bg-slate-400 active:bg-slate-500"
+          onclick="showModal()"
+        >
+          ➕Add_Music
+        </button>
       </div>
 
       <!-- music list -->
@@ -52,28 +56,47 @@
         </div>
       </div>
     </div>
-    
-    <div id="modal" class="hidden absolute w-screen h-screen flex items-center justify-center">
-      <form action="add" method="post" enctype="multipart/form-data" class="bg-slate-500 p-4 h-2/4 w-2/4 flex items-center flex-col justify-between">
-        <button class="text-end" style="width: -webkit-fill-available; cursor: default;" type="button"><span class="p-2 rounded-full bg-red-700 hover:bg-red-500" style="cursor: pointer;" onclick="hideModal()">X</span></button>
-        <label for="file">File: </label><input name="file" type="file" id="file" required><br><br>
-        <button type="submit" class="bg-lime-900 p-3 rounded-md hover:bg-lime-700 active:bg-lime-500">Add This Music</button>
 
+    <div
+      id="modal"
+      class="hidden absolute w-screen h-screen flex items-center justify-center"
+    >
+      <form
+        action="add"
+        method="post"
+        enctype="multipart/form-data"
+        class="bg-slate-500 p-4 h-2/4 w-2/4 flex items-center flex-col justify-between"
+      >
+        <button
+          class="text-end"
+          style="width: -webkit-fill-available; cursor: default"
+          type="button"
+        >
+          <span
+            class="p-2 rounded-full bg-red-700 hover:bg-red-500"
+            style="cursor: pointer"
+            onclick="hideModal()"
+            >X</span
+          >
+        </button>
+        <label for="file">File: </label
+        ><input name="file" type="file" id="file" required /><br /><br />
+        <button
+          type="submit"
+          class="bg-lime-900 p-3 rounded-md hover:bg-lime-700 active:bg-lime-500"
+        >
+          Add This Music
+        </button>
       </form>
     </div>
     <script>
-      var list = [
-        {
-          name: "perfect",
-          img: "/perfect.jpeg",
-          path: "/perfect.wav",
-        },
-        {
-          name: "perfectola",
-          img: "/perfect.jpeg",
-          path: "/perfect.wav",
-        },
-      ];
+      var list;
+      xhttp = new XMLHttpRequest();
+      xhttp.open("GET", window.location.href + "musicList", false);
+      xhttp.send();
+      console.log(xhttp.responseText);
+      list = JSON.parse(xhttp.responseText).data;
+
       var current = 0;
       var audio = new Audio(list[current].path);
 
@@ -137,15 +160,15 @@
         document.querySelector("#pos").value = audio.currentTime;
       }
       create();
-      function animate(){
+      function animate() {
         bar();
         requestAnimationFrame(animate);
       }
-      function showModal(){
-        document.querySelector('#modal').classList.remove('hidden');
+      function showModal() {
+        document.querySelector("#modal").classList.remove("hidden");
       }
-      function hideModal(){
-        document.querySelector('#modal').classList.add('hidden');
+      function hideModal() {
+        document.querySelector("#modal").classList.add("hidden");
       }
       setInterval(() => {
         create();
